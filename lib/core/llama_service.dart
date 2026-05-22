@@ -10,41 +10,48 @@ class LlamaService {
   static Future<void> initialize() async {
     if (isInitialized) return;
 
-    _engine = LlamaEngine(LlamaBackend());
+    try {
+      _engine = LlamaEngine(LlamaBackend());
 
-    final dir = await getApplicationDocumentsDirectory();
-    final modelPath = '${dir.path}/models/phi-3-mini-4k-instruct-q4_k_m.gguf';
+      final dir = await getApplicationDocumentsDirectory();
+      final modelPath = '${dir.path}/models/phi-3-mini-4k-instruct-q4_k_m.gguf';
 
-    // Baixar modelo pequeno (recomendado para celular)
-    await _downloadModelIfNeeded(modelPath);
+      // Cria pasta se não existir
+      final modelDir = Directory('${dir.path}/models');
+      if (!await modelDir.exists()) {
+        await modelDir.create(recursive: true);
+      }
 
-    await _engine!.loadModel(modelPath);
+      await _engine!.loadModel(modelPath);
 
-    _session = ChatSession(
-      _engine!,
-      systemPrompt: "Você é Raust, um assistente útil, direto e amigável.",
-    );
+      _session = ChatSession(
+        _engine!,
+        systemPrompt: """
+Você é Raust, uma IA assistente de emergências e desastres.
+Seja direta, prática e calma. Priorize informações úteis para salvar vidas.
+Responda sempre em português do Brasil.
+""",
+      );
 
-    isInitialized = true;
-  }
-
-  static Future<void> _downloadModelIfNeeded(String path) async {
-    final file = File(path);
-    if (await file.exists()) return;
-
-    // Aqui você pode adicionar download de um modelo leve
-    // Exemplo: Phi-3 mini 4bit (roda bem em celulares medianos)
-    print("Modelo não encontrado. Baixe manualmente primeiro.");
+      isInitialized = true;
+      print("✅ Raust IA inicializada com sucesso!");
+    } catch (e) {
+      print("Erro ao inicializar Llama: $e");
+    }
   }
 
   static Stream<String> sendMessage(String message) async* {
-    if (_session == null) {
-      yield "IA ainda não foi inicializada.";
+    if (!isInitialized || _session == null) {
+      yield "⚠️ IA ainda não foi carregada. Tente novamente em alguns segundos.";
       return;
     }
 
-    await for (final chunk in _session!.generate(message)) {
-      yield chunk.choices.first.delta.content ?? '';
+    try {
+      await for (final chunk in _session!.generate(message)) {
+        yield chunk.choices.first.delta.content ?? '';
+      }
+    } catch (e) {
+      yield "Erro ao gerar resposta: $e";
     }
   }
 
