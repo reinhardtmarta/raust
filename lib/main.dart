@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
-import 'services/firebase_service.dart';
-import 'screens/map_screen.dart';
+
+import 'core/llama_service.dart';
+import 'features/chat/chat_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Nota: Para rodar localmente, o Firebase precisa estar configurado
-  // No MVP, se não houver firebase_options.dart, o app pode falhar no init
-  try {
-    await Firebase.initializeApp();
-  } catch (e) {
-    print("Firebase não inicializado - certifique-se de seguir o guia de setup: $e");
-  }
-  
+
+  // Inicializa a IA local (Llama)
+  await LlamaService.initialize();
+
   runApp(const RaustApp());
 }
 
@@ -24,20 +20,23 @@ class RaustApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider<FirebaseService>(create: (_) => FirebaseService()),
+        // Podemos adicionar mais providers depois
+        Provider<LlamaService>(create: (_) => LlamaService()),
       ],
       child: MaterialApp(
-        title: 'RAUST',
+        title: 'Raust',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.deepPurple,
           useMaterial3: true,
           brightness: Brightness.light,
         ),
         darkTheme: ThemeData(
           brightness: Brightness.dark,
+          primarySwatch: Colors.deepPurple,
         ),
-        home: const MapScreen(),
+        themeMode: ThemeMode.system,
+        home: const ChatScreen(),   // Tela principal agora é o chat com IA
       ),
     );
   }
