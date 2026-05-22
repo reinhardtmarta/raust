@@ -1,5 +1,5 @@
 name: raust
-description: Assistente pessoal com IA local e feed comunitário simples
+description: Rede de alertas comunitários para desastres e emergências (estilo Waze expandido)
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -13,10 +13,11 @@ dependencies:
   llamadart: ^0.6.15
   path_provider: ^2.1.4
   shared_preferences: ^2.3.0
-  flutter_markdown: ^0.7.4
   image_picker: ^1.1.2
   uuid: ^4.5.0
   intl: ^0.19.0
+  geolocator: ^13.0.1          # Para pegar localização
+  flutter_markdown: ^0.7.4
 
 dev_dependencies:
   flutter_test:
