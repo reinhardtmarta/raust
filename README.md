@@ -15,47 +15,9 @@ O RAUST é um MVP de aplicativo Flutter focado em alertas comunitários anônimo
 - **OpenStreetMap** (Mapas)
 - **Open-Meteo API** (Clima)
 
-## 📋 Instruções de Setup Firebase
 
-Para que o app funcione com o banco de dados, você precisa:
-
-1.  Crie um projeto no [Firebase Console](https://console.firebase.google.com/).
-2.  Adicione um app **Android**:
-    - Nome do pacote: `com.raust.app`
-3.  Baixe o arquivo `google-services.json` e coloque em: `android/app/google-services.json`.
-4.  No console do Firebase, ative o **Cloud Firestore** em modo de teste.
-5.  Adicione as seguintes regras ao Firestore:
-    ```
-    rules_version = '2';
-    service cloud.firestore {
-      match /databases/{database}/documents {
-        match /reports/{report} {
-          allow read, write: if true; // Para MVP anônimo
-        }
-      }
-    }
-    ```
-
-## 🏗️ Como Rodar
-
-1.  Clone o projeto ou copie os arquivos.
-2.  Instale as dependências:
-    ```bash
-    flutter pub get
-    ```
-3.  Execute o app:
-    ```bash
-    flutter run
-    ```
-
-## 📦 Build APK (Release)
-
-Para gerar o instalador para Android:
-
-```bash
-flutter build apk --release
-```
-O arquivo será gerado em `build/app/outputs/flutter-apk/app-release.apk`.
-
+## 📦 Coming Soon - Em breve
 ---
+
+## 📝 Working 
 *Desenvolvido como uma ferramenta de segurança comunitária para o RS.*
